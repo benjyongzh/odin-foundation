@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock-Paper-Scissors</title>
+</head>
+<body>
+    <script>
+        const choices = {
+            //must be in ascending power order
+            0: "Rock",
+            1: "Paper",
+            2: "Scissors"
+        }
+
+        function getComputerChoice(){
+            return choices[Math.floor(Math.random() * Object.keys(choices).length)];
+        }
+
+        let playerScore = 0;
+        let computerScore = 0;
+
+        function playRound(playerSelection, computerSelection){
+            let player = Object.keys(choices).find(key => choices[key].toUpperCase() == playerSelection.toUpperCase());
+            let computer = Object.keys(choices).find(key => choices[key].toUpperCase() == computerSelection.toUpperCase());
+            player = parseInt(player);
+            computer = parseInt(computer);
+            //console.log(`playerValue is ${player}`);
+            //console.log(`computerValue is ${computer}`);
+
+            //draw
+            if (player === computer){
+                console.log(`It's a Draw. Both chose ${choices[player]}`);
+                return;
+            }
+
+            //case for player = scissors and computer = rock
+            if (player >= 2 && computer === 0){
+                //player lose
+                //console.log("case 1")
+                console.log(`You Lose! ${choices[computer]} beats ${choices[player]}`);
+                computerScore += 1;
+                return;
+            }
+
+            //case for player = rock and computer = scissors
+            if (computer >= 2 && player === 0){
+                //player win
+                //console.log("case 2")
+                console.log(`You Win! ${choices[player]} beats ${choices[computer]}`);
+                playerScore += 1;
+                return;
+            }
+            
+            //other consecutive cases
+            if (computer > player){
+                //player lose
+                //console.log("case 3")
+                console.log(`You Lose! ${choices[computer]} beats ${choices[player]}`);
+                computerScore += 1;
+                return;
+            } else {
+                //player win
+                //console.log("case 4")
+                console.log(`You Win! ${choices[player]} beats ${choices[computer]}`);
+                playerScore += 1;
+                return;
+            }
+        }
+
+        function game(){
+            let rounds = Number(prompt("Please enter the number of rounds"));
+
+            if (rounds == null || isNaN(rounds) ){
+                alert("Must be a number. Please try again.");
+                game();
+            }
+
+            for (let i = 0; i < rounds; i++){
+                let playerSelection = prompt(`Round ${i+1}
+                Please enter 'rock', 'paper' and 'scissors'`).toLowerCase();
+
+                console.log(`player selection is ${playerSelection}`);
+                if (playerSelection == "rock" || playerSelection == "paper" || playerSelection == "scissors") {
+                    const computerSelection = getComputerChoice();
+                    playRound(playerSelection, computerSelection);
+                } else {
+                    alert("Invalid entry. Must be 'rock', 'paper' or 'scissors'. Please try again.");
+
+                    i--;
+                }
+
+            }
+
+            let finalString = "";
+            if (playerScore === computerScore){
+                finalString = "It's a draw."
+            } else {
+                finalString = playerScore > computerScore ? "Player wins!" : "Computer wins!";
+            }
+
+            alert(`Final score:
+            Player: ${playerScore}
+            Computer: ${computerScore}
+            ${finalString}`);
+
+        }
+
+        game();
+
+    </script>
+</body>
+</html>
