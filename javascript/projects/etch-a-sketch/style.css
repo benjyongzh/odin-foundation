@@ -37,6 +37,11 @@ button {
 
 .box {
     border: 1px solid blue;
+    transition: all 0.1s ease;
+}
+
+.box:hover {
+    background-color: blue;
 }
 
 .refresh-button {
