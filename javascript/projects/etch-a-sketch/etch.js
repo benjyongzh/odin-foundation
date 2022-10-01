@@ -1,35 +1,33 @@
 const container = document.querySelector("#grid-container");
 const refreshButton = document.querySelector(".refresh-button");
 
+let width = 16;
+let height = 16;
 const widthLimit = 100;
 const heightLimit = 100;
 
 function refresh(){
-    const width = specifyWidth();
-    const height = specifyHeight();
-    console.log(width);
-    console.log(height);
-
+    specifyWidth();
+    specifyHeight();
+    console.log(`New width is ${width}`);
+    console.log(`New height is ${height}`);
     initialize(width, height);
 }
 
 function specifyWidth(){
-    let width = prompt("Specify number of boxes along the width");
-    if (isNaN(width) || width > widthLimit){
+    width = prompt("Specify number of boxes along the width");
+    if (isNaN(width) || width > widthLimit || width.trim().length === 0){
         alert(`Please specify a numeric digit below ${widthLimit}`);
         specifyWidth();
-    }
-    return parseInt(width);
+    };
 }
 
 function specifyHeight(){
-    let height = prompt("Specify number of boxes along the height");
-    if (isNaN(height) || height > heightLimit){
+    height = prompt("Specify number of boxes along the height");
+    if (isNaN(height) || height > heightLimit || height.trim().length === 0){
         alert(`Please specify a numeric digit below ${heightLimit}`);
         specifyHeight();
-    }
-    return parseInt(height);
-
+    };
 }
 
 function initialize(width, height){
@@ -47,10 +45,10 @@ function initialize(width, height){
         box.setAttribute('id', `box-${i}`);
         box.classList.add("box");
         container.appendChild(box);
-    }
+    };
 
 }
 
 refreshButton.addEventListener('click', refresh);
 
-initialize(16, 16);
+initialize(width, height);
