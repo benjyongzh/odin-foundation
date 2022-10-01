@@ -5,7 +5,6 @@ const choices = {
     2: "Scissors"
 }
 
-
 let playerScore = 0;
 let computerScore = 0;
 let winningScore = 5;
@@ -52,8 +51,8 @@ function game(){
 
 function playerMakeSelection(event){
     //get player choice
-    //console.log(event.target.querySelector(".choice-text"))
-    const playerSelection = event.target.querySelector(".choice-text").textContent;
+    //use event.currentTarget to get the whole button
+    const playerSelection = event.currentTarget.querySelector(".choice-text").textContent;
     //console.log(`player chooses ${playerSelection}`)
 
     //get computer choice
@@ -62,19 +61,8 @@ function playerMakeSelection(event){
     //play round
     playRound(playerSelection, computerSelection);
 
-    //check player score display
-    const playerScoreDisplay = document.querySelector(`.scoreboard-score[data-key="player"]`)
-    playerScoreDisplay.textContent = playerScore;
-
-    //check computer score display
-    const computerScoreDisplay = document.querySelector(`.scoreboard-score[data-key="computer"]`)
-    computerScoreDisplay.textContent = computerScore;
-
-    //check for end game
-    currentRound += 1;
-    if (currentRound > winningScore){
-        endGame();
-    }
+    //update scores
+    updateScore();
 };
 
 function getComputerChoice(){
@@ -134,6 +122,23 @@ function playRound(playerSelection, computerSelection){
 
 }
 
+function updateScore(){
+    //check player score display
+    const playerScoreDisplay = document.querySelector(`.scoreboard-score[data-key="player"]`)
+    playerScoreDisplay.textContent = playerScore;
+
+    //check computer score display
+    const computerScoreDisplay = document.querySelector(`.scoreboard-score[data-key="computer"]`)
+    computerScoreDisplay.textContent = computerScore;
+
+    currentRound += 1;
+    checkEndGameCondition();
+}
+
+function checkEndGameCondition(){
+    if (playerScore >= winningScore || computerScore >= winningScore) endGame();
+}
+
 function endGame(){
     //initialize commentary
     let finalString = "";
@@ -179,13 +184,13 @@ const buttons = document.querySelectorAll(".choice");
 
 function activateButtons(){
     buttons.forEach(button => {
-        button.addEventListener('click', playerMakeSelection);
+        button.addEventListener('click', playerMakeSelection, {capture:true});
     })
 }
 
 function deactivateButtons(){
     buttons.forEach(button => {
-        button.removeEventListener('click', playerMakeSelection);
+        button.removeEventListener('click', playerMakeSelection, {capture:true});
     })
 }
 
