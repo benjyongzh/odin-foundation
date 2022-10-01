@@ -50,9 +50,12 @@ function game(){
 } */
 
 function playerMakeSelection(event){
-    //get player choice
+    //get player choice button
     //use event.currentTarget to get the whole button
-    const playerSelection = event.currentTarget.querySelector(".choice-text").textContent;
+    const buttonText = event.currentTarget.querySelector(".choice-text");
+
+
+    const playerSelection = buttonText.textContent;
     //console.log(`player chooses ${playerSelection}`)
 
     //get computer choice
@@ -184,14 +187,40 @@ const buttons = document.querySelectorAll(".choice");
 
 function activateButtons(){
     buttons.forEach(button => {
-        button.addEventListener('click', playerMakeSelection, {capture:true});
+        button.addEventListener('click', playerMakeSelection, true);
+        button.addEventListener('mousedown', pressButton, true);
     })
 }
 
 function deactivateButtons(){
     buttons.forEach(button => {
-        button.removeEventListener('click', playerMakeSelection, {capture:true});
+        button.removeEventListener('click', playerMakeSelection, true);
+        button.removeEventListener('mousedown', pressButton, true);
     })
 }
+
+function pressButton(event){
+    const button = event.currentTarget;
+
+    //animation for clicking
+    button.classList.add("clicked");
+    button.addEventListener('mouseleave', unpressButton, true);
+    button.addEventListener('mouseup', unpressButton, true);
+}
+
+function unpressButton(event){
+    const button = event.currentTarget;
+
+    //animation for clicking
+    button.classList.remove("clicked");
+    button.removeEventListener('mouseleave', unpressButton, true);
+    button.removeEventListener('mouseup', unpressButton, true);
+}
+
+/* function removeClickEffect(event){
+    if (event.propertyName !== 'transform') return;
+    this.classList.remove("clicked");
+    this.removeEventListener("transitionend", removeClickEffect);
+} */
 
 startGame();

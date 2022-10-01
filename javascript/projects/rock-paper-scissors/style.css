@@ -1,5 +1,5 @@
 * {
-    border: 1px solid black;
+    /* border: 1px solid black; */
     font-family: Helvetica, Arial, sans-serif;
     font-weight: lighter;
 }
@@ -54,10 +54,15 @@ body {
     justify-content: space-between;
 }
 
+button {
+    border: none;
+}
+
 .choice {
     width: 220px;
     height: 200px;
     background-color: rgb(32, 43, 63);
+    border: none;
     border-radius: 20px;
     display: flex;
     flex-direction: column;
@@ -72,21 +77,31 @@ body {
     height:140px;
 }
 
-.choice-text {
+.choice>.choice-text {
     font-size: 20px;
 }
 
-/* .highlighted {
-    font-size: 24px;
-} */
+.choice,
+.choice>.choice-text,
+.choice>img,
+.play-again-button {
+    transition: all .12s ease;
+}
 
-.choice:hover{
-    font-size: 24px;
-    transform: scale(1.05);
+.choice:hover .choice-text{
+    font-size: 24px !important;
+    text-shadow: 3px 3px 0.3em black;
+    font-weight: bolder;
+}
+
+.choice:hover img{
+    /* box-shadow: 0 0 0.5rem #ffc600; */
+    /* box-shadow: 0 0 0.5rem rgb(136, 167, 224); */
+    transform: scale(1.15);
 }
 
 .clicked {
-
+    transform: scale(0.9);
 }
 
 .footer {
@@ -134,10 +149,15 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    color:rgb(34, 34, 34);
-    padding: 0.7em 1.3em;
-    font-size: 30px;
-    border-radius: 10px;
+    color: rgb(34, 34, 34);
+    padding: 0.7em 2.4em;
+    font-size: 20px;
+    border-radius: 4px;
+}
+
+.play-again-button:hover {
+    background-color: rgb(71, 146, 216);
+    color: rgb(15,15,15);
 }
 
 .invisible {
