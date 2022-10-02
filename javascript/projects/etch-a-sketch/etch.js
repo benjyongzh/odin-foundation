@@ -5,6 +5,7 @@ let width = 16;
 let height = 16;
 const widthLimit = 100;
 const heightLimit = 100;
+let isMouseDown = false;
 
 function refresh(){
     specifyWidth();
@@ -43,12 +44,35 @@ function initialize(width, height){
     for (let i = 0; i < count; i++){
         const box = document.createElement("div");
         box.setAttribute('id', `box-${i}`);
+        // box.setAttribute('draggable', false);
+        // console.log(box.getAttribute('draggable'))
         box.classList.add("box");
+        box.addEventListener("mouseover", boxActivate);
+        box.addEventListener("mousedown", boxActivate);
         container.appendChild(box);
     };
 
 }
 
+function boxActivate(event){
+    if (!isMouseDown) return;
+    const box = event.currentTarget;
+    box.classList.add("activated");
+}
+
+function mouseActivate(event){
+    event.preventDefault();
+    isMouseDown = true;
+    console.log(`mousedown is ${isMouseDown}`)
+};
+
+function mouseDeactivate(event){
+    isMouseDown = false;
+    console.log(`mousedown is ${isMouseDown}`)
+};
+
 refreshButton.addEventListener('click', refresh);
+container.addEventListener("mousedown", mouseActivate);
+container.addEventListener("mouseup", mouseDeactivate);
 
 initialize(width, height);
