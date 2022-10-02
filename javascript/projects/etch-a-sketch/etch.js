@@ -48,7 +48,6 @@ function initialize(width, height){
         // console.log(box.getAttribute('draggable'))
         box.classList.add("box");
         box.addEventListener("mouseover", boxActivate);
-        box.addEventListener("mousedown", boxActivate);
         container.appendChild(box);
     };
 
@@ -64,6 +63,9 @@ function mouseActivate(event){
     event.preventDefault();
     isMouseDown = true;
     console.log(`mousedown is ${isMouseDown}`)
+    if (event.currentTarget != event.target){
+        event.target.classList.add("activated");
+    };
 };
 
 function mouseDeactivate(event){
