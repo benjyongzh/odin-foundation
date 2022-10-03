@@ -10,12 +10,16 @@ const footer = document.querySelector(".footer");
 const numbers = [1,2,3,4,5,6,7,8,9,0]
 const maxDigits = 10;
 
-//operator info
+//variables
 let currentOperation = null;
+let firstNumber = 0;
+
+//operator info
 const operatorAdd = (a, b) => a + b;
 const operatorSubtract = (a, b) => a - b;
 const operatorMultiply = (a, b) => a * b;
 const operatorDivide = (a, b) => a / b;
+
 const operators = {
     add: [operatorAdd, "+"],
     subtract: [operatorSubtract, "-"],
@@ -27,9 +31,28 @@ const operators = {
 const executionClear = () => {
     displaySecondary.textContent = "";
     displayPrimary.textContent = "";
+    firstNumber = 0;
+    currentOperation = null;
 };
-const executionBackspace = (a, b) => a - b;
-const executionEnter = (a, b) => a * b;
+
+const executionBackspace = () => {
+    let tempText = [...displayPrimary.textContent];
+    tempText.splice(tempText.length -1);
+    displayPrimary.textContent = tempText.join("");
+};
+
+const executionEnter = () => {
+    //check if currentOperation exists
+    if (!currentOperation) return;
+
+    //check if divide by 0
+    if (currentOperation == operatorDivide && displayPrimary.textContent ==="0") {
+        divideByZero();
+        return;
+    }
+
+};
+
 const executions = {
     clear: [executionClear, "C"],
     backspace: [executionBackspace, "b"],
@@ -55,10 +78,19 @@ function initialize(){
         const button = document.createElement("button");
         button.classList.add("operator-button");
         button.setAttribute("id", `${operator}`);
-        // button.setAttribute("function", `${operators[operator][0]}`);
         button.textContent = `${operators[operator][1]}`;
         button.addEventListener('click', pressButton);
         operatorButtonContainer.appendChild(button);
+    };
+
+    //create execution buttons
+    for (let execution in executions){
+        const button = document.createElement("button");
+        button.classList.add("execution-button");
+        button.setAttribute("id", `${execution}`);
+        button.textContent = `${executions[execution][1]}`;
+        button.addEventListener('click', pressButton);
+        executionButtonContainer.appendChild(button);
     };
 };
 
@@ -68,11 +100,23 @@ function pressButton(event){
 
     //button is a number
     if (!isNaN(buttonID)){
-        if (displayPrimary.textContent.length < maxDigits) {
-            displayPrimary.textContent += parseInt(buttonID);
-        } else {
+        //too many digits displayed
+        if (displayPrimary.textContent.length >= maxDigits) {
             footer.textContent = "too many digits";
+            return;
         };
+
+        //current display is only a "0"
+        if (displayPrimary.textContent === "0") {
+            //number pressed is a non-zero
+            if (buttonID != 0) {
+                displayPrimary.textContent = parseInt(buttonID);
+            }
+            return;
+        }
+
+        // add pressed number to display
+        displayPrimary.textContent += parseInt(buttonID);
         return;
     };
 
@@ -86,17 +130,34 @@ function pressButton(event){
             currentOperation = operation;
             displayPrimary.textContent = "";
         } else {
-            const result = currentOperation(firstNumber, parseInt(displayPrimary.textContent));
-            displaySecondary.textContent = `${result} ${button.textContent} `;
-            firstNumber = result;
-            const operation = operators[buttonID][0];
-            currentOperation = operation;
-            displayPrimary.textContent = "";
+            //check if divide by 0
+            if (displayPrimary.textContent == 0 && currentOperation == operatorDivide){
+                //divided by 0
+                divideByZero();
+            } else {
+                const result = currentOperation(firstNumber, parseInt(displayPrimary.textContent));
+                displaySecondary.textContent = `${result} ${button.textContent} `;
+                firstNumber = result;
+                const operation = operators[buttonID][0];
+                currentOperation = operation;
+                displayPrimary.textContent = "";
+            }
         }
-
+        return;
     };
 
+    //button is an execution
+    if (buttonID in executions){
+        executions[buttonID][0]();
+        return;
+    };
+
+
 };
+
+function divideByZero(){
+    footer.textContent = "lmao how dare u";
+}
 
 
 initialize();
