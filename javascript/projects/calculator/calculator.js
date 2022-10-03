@@ -8,9 +8,10 @@ const displayPrimary = document.querySelector(".display-primary");
 const footer = document.querySelector(".footer");
 
 const numbers = [1,2,3,4,5,6,7,8,9,0]
-const maxDigits = 15;
+const maxDigits = 10;
 
 //operator info
+let currentOperation = null;
 const operatorAdd = (a, b) => a + b;
 const operatorSubtract = (a, b) => a - b;
 const operatorMultiply = (a, b) => a * b;
@@ -54,7 +55,7 @@ function initialize(){
         const button = document.createElement("button");
         button.classList.add("operator-button");
         button.setAttribute("id", `${operator}`);
-        button.setAttribute("function", `${operators[operator][0]}`);
+        // button.setAttribute("function", `${operators[operator][0]}`);
         button.textContent = `${operators[operator][1]}`;
         button.addEventListener('click', pressButton);
         operatorButtonContainer.appendChild(button);
@@ -77,8 +78,22 @@ function pressButton(event){
 
     //button is an operator
     if (buttonID in operators){
-        displaySecondary.textContent = `${displayPrimary.textContent} ${button.textContent} `;
-        displayPrimary.textContent = "";
+        //check if currently computing an operator
+        if (!currentOperation) {
+            displaySecondary.textContent += `${displayPrimary.textContent} ${button.textContent} `;
+            firstNumber = parseInt(displayPrimary.textContent);
+            const operation = operators[buttonID][0];
+            currentOperation = operation;
+            displayPrimary.textContent = "";
+        } else {
+            const result = currentOperation(firstNumber, parseInt(displayPrimary.textContent));
+            displaySecondary.textContent = `${result} ${button.textContent} `;
+            firstNumber = result;
+            const operation = operators[buttonID][0];
+            currentOperation = operation;
+            displayPrimary.textContent = "";
+        }
+
     };
 
 };
