@@ -36,6 +36,10 @@ const executionClear = () => {
 };
 
 const executionBackspace = () => {
+    if (displayPrimary.textContent.length == 0) {
+        return;
+    };
+
     let tempText = [...displayPrimary.textContent];
     tempText.splice(tempText.length -1);
     displayPrimary.textContent = tempText.join("");
@@ -51,6 +55,13 @@ const executionEnter = () => {
         return;
     }
 
+    //havent keyed in any number to execute on
+    if (displayPrimary.textContent == "") {
+        displayFooterText("Key in a number first");
+        return;
+    }
+
+
 };
 
 const executions = {
@@ -59,7 +70,9 @@ const executions = {
     enter: [executionEnter, "="],
 };
 
-
+function displayFooterText(string){
+    footer.textContent = string;
+}
 
 function initialize(){
     //create number buttons
@@ -102,7 +115,7 @@ function pressButton(event){
     if (!isNaN(buttonID)){
         //too many digits displayed
         if (displayPrimary.textContent.length >= maxDigits) {
-            footer.textContent = "too many digits";
+            displayFooterText("Too many digits");
             return;
         };
 
@@ -156,7 +169,7 @@ function pressButton(event){
 };
 
 function divideByZero(){
-    footer.textContent = "lmao how dare u";
+    displayFooterText("Cannot divide by 0");
 }
 
 

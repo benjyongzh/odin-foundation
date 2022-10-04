@@ -1,5 +1,5 @@
 * {
-    border: 1px solid black;
+    /* border: 1px solid black; */
     font-family:Verdana, Geneva, Tahoma, sans-serif;
     font-weight: lighter;
     box-sizing: border-box;
@@ -47,13 +47,13 @@ body {
     flex-direction: column;
     /* justify-content: space-between; */
     align-items: stretch;
-    width: 500px;
-    height: 600px;
-    padding: 15px;
-    gap: 15px;
-    border: 3px solid rgb(22, 24, 26);
-    border-radius: 18px;
-    box-shadow: 0px 0px 100px 1px rgba(22, 24, 26, 0.473);
+    width: 450px;
+    height: 620px;
+    padding: 25px;
+    gap: 25px;
+    border: 0px solid rgb(22, 24, 26);
+    border-radius: 12px;
+    box-shadow: 0px 30px 100px 1px rgba(22, 24, 26, 0.5);
 }
 
 .displayscreen {
@@ -63,12 +63,13 @@ body {
     height:120px;
     background-color: rgb(168, 168, 168);
     padding: 5px 15px;
-    border: 2px solid rgb(22, 24, 26);
+    border: 1px solid rgb(22, 24, 26);
     gap: 5px;
-    border-radius: 8px;
+    border-radius: 6px;
     justify-content: center;
     align-items: stretch;
     font-weight: bolder;
+    box-shadow: inset 0px 0px 20px 1px rgba(22, 24, 26, 0.7);
 }
 
 .display-secondary,
@@ -93,8 +94,9 @@ body {
     display: flex;
     align-items: stretch;
     justify-content: space-between;
-    gap: 10px;
+    /* gap: 10px; */
     flex: 1;
+    padding: 0px 2px;
 }
 
 
@@ -110,6 +112,7 @@ body {
 .number-button-container {
     grid-template-columns: repeat(3, 1fr);
     flex: 3;
+    padding-right: 5px;
 }
 
 /* .operator-button-container,
@@ -120,29 +123,33 @@ body {
 .operator-button-container {
     grid-template-columns: 1fr;
     flex: 1;
+    padding: 0px 5px;
 }
 .execution-button-container {
     grid-template-columns: 1fr;
     flex: 1;
+    padding-left: 5px;
 }
 
 .number-button,
 .operator-button,
 .execution-button {
-    border: 0px solid rgb(22, 24, 26);
+    border: 1px solid rgba(22, 24, 26, 0.3);
     border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 40px;
-    font-weight: bold;
+    font-size: 30px;
+    font-weight: normal;
     background-color: rgb(151, 159, 168);
+    box-shadow: 0px 0px 4px 4px rgba(22, 24, 26, 0.5);
 }
 
 .number-button:hover,
 .operator-button:hover,
 .execution-button:hover {
     background-color: rgb(196, 206, 216);
+    box-shadow: 0px 0px 6px 5px rgba(22, 24, 26, 1);
 }
 
 
