@@ -95,7 +95,6 @@ function initialize(){
 
     //create operator buttons
     for (let operator in operators){
-        //console.log(operator)
         const button = document.createElement("button");
         button.classList.add("operator-button");
         button.setAttribute("id", `${operator}`);
@@ -113,6 +112,14 @@ function initialize(){
         button.addEventListener('click', pressButton);
         executionButtonContainer.appendChild(button);
     };
+
+    //add mousedown mouseup event for all buttons
+    const allButtons = document.querySelectorAll("button");
+    allButtons.forEach(button => {
+        button.addEventListener('mousedown', mouseDownButton);
+        button.addEventListener('mouseup', mouseOffButton);
+        button.addEventListener('mouseleave', mouseOffButton);
+    });
 };
 
 function pressButton(event){
@@ -145,30 +152,50 @@ function pressButton(event){
     if (buttonID in operators){
         //check if currently computing an operator
         if (!currentOperation) {
+            //havent keyed in any number to execute on
+            if (displayPrimary.textContent == "") {
+                displayFooterText("Key in a number first");
+                return;
+            }  
 
             //check if there was already a firstNumber
-            if (firstNumber && displayPrimary.textContent != "") {
+            if (firstNumber !== 0 && displayPrimary.textContent != "") {
                 displaySecondary.textContent = `${displayPrimary.textContent} ${button.textContent} `;
             } else {
                 displaySecondary.textContent += `${displayPrimary.textContent} ${button.textContent} `;
-            }
+            };
+
             firstNumber = parseInt(displayPrimary.textContent);
             const operation = operators[buttonID][0];
             currentOperation = operation;
             displayPrimary.textContent = "";
+
         } else {
             //check if divide by 0
             if (displayPrimary.textContent == 0 && currentOperation == operatorDivide){
                 //divided by 0
                 divideByZero();
-            } else {
-                const result = currentOperation(firstNumber, parseInt(displayPrimary.textContent));
-                displaySecondary.textContent = `${result} ${button.textContent} `;
-                firstNumber = result;
-                const operation = operators[buttonID][0];
-                currentOperation = operation;
-                displayPrimary.textContent = "";
+                return;
             }
+
+            //check if displayPrimary has anything at all. change operation only
+            if (displayPrimary.textContent === ""){
+                currentOperation = operators[buttonID][0];
+                let tempString = [...displaySecondary.textContent];
+                console.log(tempString);
+                tempString.splice((displaySecondary.textContent.length - 3));
+                tempString = tempString.join("");
+                console.log(tempString);
+                displaySecondary.textContent = `${tempString} ${button.textContent} `;
+                return;
+            }
+
+            const result = currentOperation(firstNumber, parseInt(displayPrimary.textContent));
+            displaySecondary.textContent = `${result} ${button.textContent} `;
+            firstNumber = result;
+            const operation = operators[buttonID][0];
+            currentOperation = operation;
+            displayPrimary.textContent = "";
         }
         return;
     };
@@ -181,6 +208,14 @@ function pressButton(event){
 
 
 };
+
+function mouseDownButton(event){
+    event.target.classList.add("clicked");
+}
+
+function mouseOffButton(event){
+    event.target.classList.remove("clicked");
+}
 
 function divideByZero(){
     displayFooterText("Cannot divide by 0");
