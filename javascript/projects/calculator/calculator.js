@@ -41,7 +41,11 @@ const executionBackspace = () => {
     };
 
     let tempText = [...displayPrimary.textContent];
-    tempText.splice(tempText.length -1);
+    if (tempText[tempText.length -1] == ",") {
+        tempText.splice(tempText.length - 2);
+    } else {
+        tempText.splice(tempText.length - 1);
+    }
     displayPrimary.textContent = tempText.join("");
 };
 
@@ -61,7 +65,11 @@ const executionEnter = () => {
         return;
     }
 
-
+    displaySecondary.textContent += `${displayPrimary.textContent} =`;
+    const result = currentOperation(firstNumber, parseInt(displayPrimary.textContent));
+    displayPrimary.textContent = result;
+    firstNumber = result;
+    currentOperation = null;
 };
 
 const executions = {
@@ -137,7 +145,13 @@ function pressButton(event){
     if (buttonID in operators){
         //check if currently computing an operator
         if (!currentOperation) {
-            displaySecondary.textContent += `${displayPrimary.textContent} ${button.textContent} `;
+
+            //check if there was already a firstNumber
+            if (firstNumber && displayPrimary.textContent != "") {
+                displaySecondary.textContent = `${displayPrimary.textContent} ${button.textContent} `;
+            } else {
+                displaySecondary.textContent += `${displayPrimary.textContent} ${button.textContent} `;
+            }
             firstNumber = parseInt(displayPrimary.textContent);
             const operation = operators[buttonID][0];
             currentOperation = operation;
