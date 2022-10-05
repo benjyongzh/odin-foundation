@@ -16,10 +16,10 @@ let firstNumber = 0;
 let errorMode = false;
 
 //operator info
-const operatorAdd = (a, b) => a + b;
-const operatorSubtract = (a, b) => a - b;
-const operatorMultiply = (a, b) => a * b;
-const operatorDivide = (a, b) => a / b;
+const operatorAdd = (a, b) => parseFloat(a) + parseFloat(b);
+const operatorSubtract = (a, b) => parseFloat(a) - parseFloat(b);
+const operatorMultiply = (a, b) => parseFloat(a) * parseFloat(b);
+const operatorDivide = (a, b) => parseFloat(a) / parseFloat(b);
 
 const operators = {
     add: [operatorAdd, "+"],
