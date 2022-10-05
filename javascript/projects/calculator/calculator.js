@@ -13,6 +13,7 @@ const maxDigits = 10;
 //variables
 let currentOperation = null;
 let firstNumber = 0;
+let errorMode = false;
 
 //operator info
 const operatorAdd = (a, b) => a + b;
@@ -27,12 +28,20 @@ const operators = {
     divide: [operatorDivide, "/"],
 };
 
+//erorMode()
+function toggleErrorMode(){
+    const clearButton = document.querySelector(`button[id="clear"]`);
+    clearButton.classList.toggle("errorMode");
+    errorMode = !errorMode;
+}
+
 //executions info
 const executionClear = () => {
     displaySecondary.textContent = "";
     displayPrimary.textContent = "";
     firstNumber = 0;
     currentOperation = null;
+    displayFooterText("");
 };
 
 const executionBackspace = () => {
@@ -66,7 +75,23 @@ const executionEnter = () => {
     }
 
     displaySecondary.textContent += `${displayPrimary.textContent} =`;
-    const result = currentOperation(firstNumber, parseInt(displayPrimary.textContent));
+    let result = currentOperation(firstNumber, parseInt(displayPrimary.textContent));
+
+    //check if more than 999999999...etc not counting decimals
+    const maxValue = (10 ** maxDigits) - 1;
+    if (result > maxValue) {
+        displayFooterText("Answer is too long to be displayed");
+        toggleErrorMode();
+        return;
+    };
+
+    //check decimal places
+    let tempString = String(result);
+    if (tempString.length > maxDigits){
+        tempString = tempString.slice(0,maxDigits+1);
+        if (tempString[tempString.length-1] == ".") tempString = tempString.slice(0, tempString.length-2);
+        result = tempString;
+    }
     displayPrimary.textContent = result;
     firstNumber = result;
     currentOperation = null;
@@ -120,11 +145,22 @@ function initialize(){
         button.addEventListener('mouseup', mouseOffButton);
         button.addEventListener('mouseleave', mouseOffButton);
     });
+
 };
 
 function pressButton(event){
     const button = event.target;
     const buttonID = button.getAttribute("id");
+
+    //in errorMode
+    if (errorMode){
+        if (buttonID == "clear") {
+            executionClear();
+            toggleErrorMode();
+            return;
+        }
+        return;
+    }
 
     //button is a number
     if (!isNaN(buttonID)){

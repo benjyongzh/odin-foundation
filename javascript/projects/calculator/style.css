@@ -166,6 +166,7 @@ body {
     color: rgb(121, 0, 0);
 }
 
+
 .execution-button[id="enter"] {
     grid-row: 3 / 5;
     background-color: rgb(124, 166, 209);
@@ -174,10 +175,11 @@ body {
 
 .execution-button[id="enter"]:hover {
     background-color: rgb(83, 153, 223);
-
 }
 
-
+.errorMode {
+    background-color: rgb(167, 98, 98);
+}
 
 .footer {
     display: flex;
