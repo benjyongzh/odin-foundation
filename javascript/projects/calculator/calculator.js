@@ -76,22 +76,27 @@ const executionEnter = () => {
     }
 
     displaySecondary.textContent += `${displayPrimary.textContent} =`;
-    let result = currentOperation(firstNumber, parseInt(displayPrimary.textContent));
+    let result = currentOperation(firstNumber, parseFloat(displayPrimary.textContent));
 
     //check if more than 999999999...etc not counting decimals
-    if (!isWithinMaxDigits(String(result))){
+    const maxValue = (10 ** maxDigits) - 1;
+    if (parseInt(result) > maxValue || parseInt(result) < (maxValue * -1)){
         displayFooterText("Answer is too long to be displayed");
         toggleErrorMode();
         return;
     }
 
-    /* //check decimal places
-    let tempString = String(result);
+    //check decimal places
+    //truncate result to within maxDigits
+    result = truncate(result, maxDigits);
+
+    /* let tempString = String(result);
     if (tempString.length > maxDigits){
         tempString = tempString.slice(0,maxDigits+1);
         if (tempString[tempString.length-1] == ".") tempString = tempString.slice(0, tempString.length-2);
         result = tempString;
     } */
+
     displayPrimary.textContent = result;
     firstNumber = result;
     currentOperation = null;
@@ -182,7 +187,7 @@ function pressButton(event){
         if (displayPrimary.textContent === "0") {
             //number pressed is a non-zero
             if (buttonID != 0) {
-                displayPrimary.textContent = parseInt(buttonID);
+                displayPrimary.textContent = parseFloat(buttonID);
             }
             return;
         }
@@ -191,7 +196,7 @@ function pressButton(event){
         //save current number first
         let tempString = displayPrimary.textContent;
         // add pressed number to display
-        displayPrimary.textContent += parseInt(buttonID);
+        displayPrimary.textContent += parseFloat(buttonID);
         //check if still withinmaxdigits
         if (!isWithinMaxDigits(displayPrimary.textContent)) {
             //overshot. revert back to prev number
@@ -234,7 +239,7 @@ function pressButton(event){
                 displaySecondary.textContent += `${displayPrimary.textContent} ${button.textContent} `;
             };
 
-            firstNumber = parseInt(displayPrimary.textContent);
+            firstNumber = parseFloat(displayPrimary.textContent);
             const operation = operators[buttonID][0];
             currentOperation = operation;
             displayPrimary.textContent = "";
@@ -259,7 +264,10 @@ function pressButton(event){
                 return;
             }
 
-            const result = currentOperation(firstNumber, parseInt(displayPrimary.textContent));
+            //add number to displaySecondar as planned
+            let result = currentOperation(firstNumber, parseFloat(displayPrimary.textContent));
+            //check if result is within range
+            result = truncate(result, maxDigits);
             displaySecondary.textContent = `${result} ${button.textContent} `;
             firstNumber = result;
             const operation = operators[buttonID][0];
@@ -282,7 +290,7 @@ function isWithinMaxDigits(inputString){
     const maxValue = (10 ** maxDigits) - 1;
 
     //no decimal points
-    if (parseInt(inputString) > maxValue || parseInt(inputString) < (maxValue * -1)) {
+    if (parseFloat(inputString) > maxValue || parseFloat(inputString) < (maxValue * -1)) {
         return false;
     };
 
@@ -293,9 +301,22 @@ function isWithinMaxDigits(inputString){
     tempArray.forEach(digit => {
         if (!isNaN(digit)) ++count;
     });
-    console.log(`digit count is ? ${count}`)
+    // console.log(`digit count is ? ${count}`)
     return count <= maxDigits;
+}
 
+function truncate(inputString, maxdigits){
+    let tempArray = String(inputString).split("");
+    let count = 0;
+    tempArray = tempArray.filter(digit => {
+        if (!isNaN(digit)) {
+            count++;
+        };
+        return (count <= maxDigits || digit == ".");
+    });
+    if (tempArray[tempArray.length - 1] == ".") tempArray.pop();
+    tempArray = tempArray.join("");
+    return tempArray;
 }
 
 function mouseDownButton(event){
