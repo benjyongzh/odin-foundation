@@ -35,6 +35,7 @@ function toggleErrorMode(){
     errorMode = !errorMode;
 }
 
+
 //executions info
 const executionClear = () => {
     displaySecondary.textContent = "";
@@ -78,20 +79,19 @@ const executionEnter = () => {
     let result = currentOperation(firstNumber, parseInt(displayPrimary.textContent));
 
     //check if more than 999999999...etc not counting decimals
-    const maxValue = (10 ** maxDigits) - 1;
-    if (result > maxValue) {
+    if (!isWithinMaxDigits(String(result))){
         displayFooterText("Answer is too long to be displayed");
         toggleErrorMode();
         return;
-    };
+    }
 
-    //check decimal places
+    /* //check decimal places
     let tempString = String(result);
     if (tempString.length > maxDigits){
         tempString = tempString.slice(0,maxDigits+1);
         if (tempString[tempString.length-1] == ".") tempString = tempString.slice(0, tempString.length-2);
         result = tempString;
-    }
+    } */
     displayPrimary.textContent = result;
     firstNumber = result;
     currentOperation = null;
@@ -117,6 +117,14 @@ function initialize(){
         button.addEventListener('click', pressButton);
         numberButtonContainer.appendChild(button);
     }
+
+    //create decimal button
+    const decimalButton = document.createElement("button");
+    decimalButton.classList.add("number-button");
+    decimalButton.setAttribute("id", `decimal`);
+    decimalButton.textContent = `.`;
+    decimalButton.addEventListener('click', pressButton);
+    numberButtonContainer.appendChild(decimalButton);
 
     //create operator buttons
     for (let operator in operators){
@@ -165,7 +173,7 @@ function pressButton(event){
     //button is a number
     if (!isNaN(buttonID)){
         //too many digits displayed
-        if (displayPrimary.textContent.length >= maxDigits) {
+        if (!isWithinMaxDigits(displayPrimary.textContent)) {
             displayFooterText("Too many digits");
             return;
         };
@@ -183,6 +191,20 @@ function pressButton(event){
         displayPrimary.textContent += parseInt(buttonID);
         return;
     };
+
+    //decimal button
+    if (buttonID == "decimal"){
+        //check if decimal point already in displayPrimary
+        if (displayPrimary.textContent.includes(".")){
+            return;
+        }
+        //check if currently only 0 displayed
+        if (displayPrimary.textContent === "0" || displayPrimary.textContent === ""){
+            displayPrimary.textContent = "0."
+        } else {
+            displayPrimary.textContent += ".";
+        }
+    }
 
     //button is an operator
     if (buttonID in operators){
@@ -244,6 +266,26 @@ function pressButton(event){
 
 
 };
+
+function isWithinMaxDigits(inputString){
+    const maxValue = (10 ** maxDigits) - 1;
+
+    //no decimal points
+    if (parseInt(inputString) > maxValue || parseInt(inputString) < (maxValue * -1)) {
+        return false;
+    };
+
+    //decimal points might be in
+    let tempArray = inputString.split("");
+    if (tempArray[0] == "-") tempArray.shift();
+    let count = 0;
+    tempArray.forEach(digit => {
+        if (!isNaN(digit)) ++count;
+    });
+    console.log(`digit count is ? ${count}`)
+    return count <= maxDigits;
+
+}
 
 function mouseDownButton(event){
     event.target.classList.add("clicked");
