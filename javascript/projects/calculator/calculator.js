@@ -187,8 +187,19 @@ function pressButton(event){
             return;
         }
 
+
+        //save current number first
+        let tempString = displayPrimary.textContent;
         // add pressed number to display
         displayPrimary.textContent += parseInt(buttonID);
+        //check if still withinmaxdigits
+        if (!isWithinMaxDigits(displayPrimary.textContent)) {
+            //overshot. revert back to prev number
+            displayFooterText("Too many digits");
+            displayPrimary.textContent = tempString;
+            console.log("rejected")
+            return;
+        };
         return;
     };
 
